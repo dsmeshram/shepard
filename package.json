@@ -1,0 +1,24 @@
+{
+  "name": "shepard",
+  "version": "1.0.0",
+  "description": "plug in for recording videos, share",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/dsmeshram/shepard.git"
+  },
+  "keywords": [
+    "recording",
+    "sharing",
+    "annotations"
+  ],
+  "author": "Damodhar",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/dsmeshram/shepard/issues"
+  },
+  "homepage": "https://github.com/dsmeshram/shepard#readme"
+}
