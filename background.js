@@ -19,7 +19,5 @@ chrome.runtime.onInstalled.addListener(function() {
               sendResponse({"id": id});
             });
       });
-
-
   });
 
