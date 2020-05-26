@@ -5,7 +5,9 @@ var pc1 = null;
 var pc2 = null;
 var desktop_sharing = false;
 var local_stream = null;
+var recordedBlobs = [];
 
+let message =document.querySelector('p');
 
 function toggle() {
     if (!desktop_sharing) {
@@ -51,74 +53,52 @@ function onAccessApproved(id,options) {
 function getUserMediaError(error) {
     console.log('navigator.webkitGetUserMedia() errot: ', error);
 }
+
+function writeLog(newmsg){
+    let oldmessage = message.innerText + "/n " + newmsg;
+    message.innerText = oldmessage;
+}
   // Capture video/audio of media and initialize RTC communication.
 function gotStream(stream) {
-    console.log('Received local stream', stream);
-    var video = document.querySelector('video');
-    try {
-      video.srcObject = stream;
-    } catch (error) {
-      video.src = URL.createObjectURL(stream);
-    }
-    stream.onended = function() { console.log('Ended'); };
-    pc1 = new RTCPeerConnection();
-    pc1.onicecandidate = function(event) {
-      onIceCandidate(pc1, event);
-    };
-    pc2 = new RTCPeerConnection();
-    pc2.onicecandidate = function(event) {
-      onIceCandidate(pc2, event);
-    };
-    pc1.oniceconnectionstatechange = function(event) {
-      onIceStateChange(pc1, event);
-    };
-    pc2.oniceconnectionstatechange = function(event) {
-      onIceStateChange(pc2, event);
-    };
-    pc2.onaddstream = gotRemoteStream;
-    pc1.addStream(stream);
-    pc1.createOffer(onCreateOfferSuccess, function() {});
-  }
-  function onCreateOfferSuccess(desc) {
-    pc1.setLocalDescription(desc);
-    pc2.setRemoteDescription(desc);
-    // Since the 'remote' side has no media stream we need
-    // to pass in the right constraints in order for it to
-    // accept the incoming offer of audio and video.
-    var sdpConstraints = {
-      'mandatory': {
-        'OfferToReceiveAudio': true,
-        'OfferToReceiveVideo': true
-      }
-    };
-    pc2.createAnswer(onCreateAnswerSuccess, function(){}, sdpConstraints);
-  }
-  function gotRemoteStream(event) {
-    // Call the polyfill wrapper to attach the media stream to this element.
-    console.log('hitting this code');
-    var remoteVideo = document.querySelector('video');
-    try {
-      remoteVideo.srcObject = event.stream;
-    } catch (error) {
-      remoteVideo.src = URL.createObjectURL(event.stream);
-    }
-  }
-  function onCreateAnswerSuccess(desc) {
-    pc2.setLocalDescription(desc);
-    pc1.setRemoteDescription(desc);
-  }
-  function onIceCandidate(pc, event) {
-    if (event.candidate) {
-      var remotePC = (pc === pc1) ? pc2 : pc1;
-      remotePC.addIceCandidate(new RTCIceCandidate(event.candidate));
-    }
-  }
-  function onIceStateChange(pc, event) {
-    if (pc) {
-      console.log('ICE state change event: ', event);
-    }
-  }
 
+  let options = {mimeType: 'video/webm'};
+
+  let mediaRecorder = new MediaRecorder(stream,options);
+  mediaRecorder.onstop = function(){
+
+    writeLog("end");
+
+    let blob = new Blob(recordedBlobs, {type: 'video/webm'});
+    let url =  URL.createObjectURL(blob);
+
+
+    writeLog("url :"+url);
+
+
+    let linka = document.createElement('a');
+        linka.href = url;
+        linka.target = "_blank"
+
+        document.body.appendChild(linka);
+
+        linka.click();
+
+        document.body.removeChild(linka);
+
+  };
+  mediaRecorder.ondataavailable = function(event){
+    if (event.data && event.data.size > 0) {
+      recordedBlobs.push(event.data)
+      writeLog("ondataavailable :");
+    }
+  }
+  mediaRecorder.start(100); // collect 100ms of data
+   
+  stream.onended = function() { 
+    mediaRecorder.stop();
+  };
+}
+ 
 /**
  * Click handler to init the desktop capture grab
  */
