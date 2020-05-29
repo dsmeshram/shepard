@@ -9,6 +9,26 @@ var recordedBlobs = [];
 
 let message =document.querySelector('p');
 
+function saveBlobToFile(blob, fileName) 
+{
+  chrome.fileSystem.chooseEntry({type: 'saveFile', suggestedName: fileName}, 
+ function(writableFileEntry) 
+ {
+  writableFileEntry.createWriter(function(writer) 
+  {
+    writer.onwriteend = function(e) 
+    {
+
+    };
+    writer.write(blob); 
+  }, errorHandler);
+});
+}
+
+function errorHandler(e){
+  console.log('error',e);
+}
+
 function toggle() {
     if (!desktop_sharing) {
         chrome.desktopCapture.chooseDesktopMedia(DESKTOP_MEDIA, onAccessApproved);
@@ -55,8 +75,8 @@ function getUserMediaError(error) {
 }
 
 function writeLog(newmsg){
-    let oldmessage = message.innerText + "/n " + newmsg;
-    message.innerText = oldmessage;
+    let oldmessage =  newmsg;
+    console.log(oldmessage);
 }
   // Capture video/audio of media and initialize RTC communication.
 function gotStream(stream) {
@@ -66,24 +86,8 @@ function gotStream(stream) {
   let mediaRecorder = new MediaRecorder(stream,options);
   mediaRecorder.onstop = function(){
 
-    writeLog("end");
-
     let blob = new Blob(recordedBlobs, {type: 'video/webm'});
-    let url =  URL.createObjectURL(blob);
-
-
-    writeLog("url :"+url);
-
-
-    let linka = document.createElement('a');
-        linka.href = url;
-        linka.target = "_blank"
-
-        document.body.appendChild(linka);
-
-        linka.click();
-
-        document.body.removeChild(linka);
+    saveBlobToFile(blob,"demodhar.mp4");
 
   };
   mediaRecorder.ondataavailable = function(event){
@@ -105,3 +109,4 @@ function gotStream(stream) {
 document.querySelector('button').addEventListener('click', function(e) {
     toggle();
 });
+

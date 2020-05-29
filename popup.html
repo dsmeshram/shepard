@@ -1,25 +1,84 @@
+<!DOCTYPE html>
 <html>
 <head>
-<style>
-  body {
-    background: white;
-    display: -webkit-flex;
-    -webkit-justify-content: center;
-    -webkit-align-items: center;
-    -webkit-flex-direction: column;
-  }
-  video {
-    width: 480px;
-    height: 360px;
-    border: 1px solid #e2e2e2;
-    box-shadow: 0 1px 1px rgba(0,0,0,0.2);
-  }
-</style>
+  <link href="ui/material-components-web.min.css" rel="stylesheet">
+  <script src="ui/material-components-web.min.js"></script>
+  
+  <style>
+    /* fallback */
+@font-face {
+  font-family: 'Material Icons';
+  font-style: normal;
+  font-weight: 400;
+  src: url(ui/flUhRq6tzZclQEJ-Vdg-IuiaDsNcIhQ8tQ.woff2) format('woff2');
+}
+
+.material-icons {
+  font-family: 'Material Icons';
+  font-weight: normal;
+  font-style: normal;
+  font-size: 24px;
+  line-height: 1;
+  letter-spacing: normal;
+  text-transform: none;
+  display: inline-block;
+  white-space: nowrap;
+  word-wrap: normal;
+  direction: ltr;
+  -webkit-font-feature-settings: 'liga';
+  -webkit-font-smoothing: antialiased;
+}
+    .app-fab--absolute {
+      position: fixed;
+      bottom: 1rem;
+      right: 1rem;
+    }
+    
+    @media(min-width: 1024px) {
+       .app-fab--absolute {
+        bottom: 1.5rem;
+        right: 1.5rem;
+      }
+    }
+    </style>
 </head>
-<body>
-    <video controls autoplay="autoplay" width="400"></video>
-    <p></p>
-    <button>Enable Capture</button>
+<body style="height: 500px;width:400px;margin: 0px;">
+  <div style="display: table-cell;">
+  <header class="mdc-top-app-bar">
+    <div class="mdc-top-app-bar__row">
+      <section class="mdc-top-app-bar__section mdc-top-app-bar__section--align-start">
+        <span class="mdc-top-app-bar__title">Shepard</span>
+      </section>
+      <section class="mdc-top-app-bar__section mdc-top-app-bar__section--align-end" role="toolbar">
+      </section>
+    </div>
+  </header>
+
+  <ul class="mdc-list mdc-list--two-line">
+    <li class="mdc-list-item" tabindex="0">
+      <span class="mdc-list-item__text">
+        <span class="mdc-list-item__primary-text">Two-line item</span>
+        <span class="mdc-list-item__secondary-text">Secondary text</span>
+      </span>
+    </li>
+    <li class="mdc-list-item">
+      <span class="mdc-list-item__text">
+        <span class="mdc-list-item__primary-text">Two-line item</span>
+        <span class="mdc-list-item__secondary-text">Secondary text</span>
+      </span>
+    </li>
+    <li class="mdc-list-item">
+      <span class="mdc-list-item__text">
+        <span class="mdc-list-item__primary-text">Two-line item</span>
+        <span class="mdc-list-item__secondary-text">Secondary text</span>
+      </span>
+    </li>
+  </ul>
+
+  <button class="mdc-fab app-fab--absolute" aria-label="Favorite">
+    <span class="mdc-fab__icon material-icons">record_voice_over</span>
+  </button>
+</div>
   <script src="index.js"></script>
 </body>
 </html>
